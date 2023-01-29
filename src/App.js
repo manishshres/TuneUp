@@ -51,7 +51,7 @@ function App() {
     <div className="App">
      <div>
       <form className="search-form" onSubmit={handleSearch}>
-        <input className="search-input" type="text" name="search" value={searchTerm} required
+        <input className="search-input" type="text" placeholder="Search Song or Artist..."name="search" value={searchTerm} required
           onChange={event => setSearchTerm(event.target.value)}/>
         <button className="search-button" type="submit">Search</button>
       </form>
