@@ -1,6 +1,8 @@
 # TuneUp
 This web application is a song filter that allows users to search for songs by title or artist.
 
+SWENG 861 Course Project - Deliverable I [DEMO LINK](https://sweng861-tuneup.herokuapp.com/) 
+![TunUp Video Demo](demo.gif)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
