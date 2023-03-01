@@ -2,38 +2,47 @@ import { useState } from "react";
 import Head from "next/head";
 import SongModal from "@/components/SongModal";
 import ArtistModal from "@/components/ArtistModal";
-import { searchSongs, getArtistData } from "@/pages/api/spotify";
+import {
+  searchSongs,
+  getArtistData,
+  getTrackData,
+  getLyricsData,
+} from "@/pages/api/spotify";
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [lyrics, setLyrics] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [selectedSong, setSelectedSong] = useState(null);
-  const [showSongModal, setshowSongModal] = useState(false);
-  const [showArtistModal, setshowArtistModal] = useState(false);
+  const [showSongModal, setShowSongModal] = useState(false);
+  const [showArtistModal, setShowArtistModal] = useState(false);
 
-  const toggleMusicModal = (data) => {
-    setQuery(data);
-    setshowSongModal(!showSongModal);
+  // Toggle the song details modal and update the query
+  const toggleSongModal = async (data) => {
+    setQuery(null);
+    const result = await getTrackData(data);
+    const lyricsData = await getLyricsData(data);
+
+    // console.log(lyricsData.lyrics.lines.map((line) => line.words));
+    setQuery(result);
+    setLyrics(lyricsData);
+    setShowSongModal(!showSongModal);
   };
+
+  // Toggle the artist modal, fetch artist data, and update the query
   const toggleArtistModal = async (data) => {
+    setQuery(null);
     const result = await getArtistData(data);
     setQuery(result);
-    setshowArtistModal(!showArtistModal);
+    setShowArtistModal(!showArtistModal);
   };
 
-  const handleShowShowMore = (song) => {
-    setSelectedSong(song);
-  };
-
-  const handleSongCloseModal = () => {
-    setSelectedSong(null);
-  };
-
+  // Update the search input as the user types
   const handleInputChange = (event) => {
     setSearchInput(event.target.value);
   };
 
+  // Fetch search results and update the state when the search button is clicked
   const handleSearchClick = async (event) => {
     event.preventDefault();
     if (searchInput.trim() !== "") {
@@ -45,7 +54,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <Head>
-        <title>Food Finder</title>
+        <title>TuneUp - Song and Artirst Finder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -74,12 +83,18 @@ export default function Home() {
         </form>
         {searchResults && (
           <>
-            <ArtistModal
-              showModal={showArtistModal}
-              toggleModal={toggleArtistModal}
-              url={query}
-            />
             <div className="grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 gap-4 mt-8">
+              <ArtistModal
+                showModal={showArtistModal}
+                toggleModal={toggleArtistModal}
+                url={query}
+              />
+              <SongModal
+                showModal={showSongModal}
+                toggleModal={toggleSongModal}
+                url={query}
+                lyricsData={lyrics}
+              />
               {searchResults.artists.map((artist, i) => (
                 <>
                   <div
@@ -120,11 +135,6 @@ export default function Home() {
               ))}
               {searchResults.songs.map((song) => (
                 <>
-                  <SongModal
-                    showModal={showSongModal}
-                    toggleModal={toggleMusicModal}
-                    url={query}
-                  />
                   <div
                     key={song.data.id}
                     className="border border-gray-300 p-4 rounded-md flex flex-col md:flex-row"
@@ -146,7 +156,7 @@ export default function Home() {
                       <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
                         onClick={() =>
-                          toggleMusicModal(song.data.uri.split(":").pop())
+                          toggleSongModal(song.data.uri.split(":").pop())
                         }
                       >
                         Show More Info
@@ -163,7 +173,7 @@ export default function Home() {
       <footer className="flex items-center justify-center w-full h-24 border-t">
         <a
           className="flex items-center justify-center"
-          href="https://github.com/username"
+          href="https://github.com/manishshres"
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 function ArtistModal({ showModal, toggleModal, url }) {
   const rest = url;
@@ -15,7 +15,7 @@ function ArtistModal({ showModal, toggleModal, url }) {
       {url ? (
         <div
           key={url.id}
-          className="bg-white rounded-lg max-w-2xl p-8 z-50 mb-2 overflow-y-auto"
+          className="bg-white rounded-lg max-w-2xl p-8 z-50 mb-2 "
         >
           {/* Log the value of the url variable to the console */}
 
@@ -47,7 +47,7 @@ function ArtistModal({ showModal, toggleModal, url }) {
             <div className="grid grid-cols-2 gap-4 mt-2">
               {/* Display the top 4 album from artist */}
               {url?.discography?.popularReleases?.items
-                .slice(0, 10)
+                .slice(0, 6)
                 .map((item, i) => (
                   <div className="border border-gray-300 p-4 rounded-md flex flex-col md:flex-row">
                     <div className="md:w-1/3 mb-4 md:mb-0 md:pr-4">

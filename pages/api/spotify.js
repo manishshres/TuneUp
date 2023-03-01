@@ -7,7 +7,14 @@ const API_KEY = process.env.NEXT_PUBLIC_RAPID_API_KEY_2;
 // Set the base URL for the Spotify API
 const BASE_URL = "https://spotify23.p.rapidapi.com";
 
+// Set the headers for the RapidAPI key and host
+const headers = {
+  "X-RapidAPI-Key": `${API_KEY}`,
+  "X-RapidAPI-Host": "spotify23.p.rapidapi.com",
+};
+
 // Function to search for songs based on a query
+// Takes in the artist's or song as an argument
 export const searchSongs = async (searchTerm) => {
   try {
     // Make a GET request to the Spotify API with the search query
@@ -19,11 +26,7 @@ export const searchSongs = async (searchTerm) => {
         limit: "6",
         numberOfTopResults: "6",
       },
-      // Set the headers for the RapidAPI key and host
-      headers: {
-        "X-RapidAPI-Key": `${API_KEY}`,
-        "X-RapidAPI-Host": "spotify23.p.rapidapi.com",
-      },
+      headers,
     });
     // Format the search results and return them
     const result = {
@@ -35,12 +38,13 @@ export const searchSongs = async (searchTerm) => {
   } catch (error) {
     // Log any errors and display an alert
     console.log(error);
-    alert("Error fetching data");
+
+    alert("Error serach fetching data!");
   }
 };
 
 // Function to fetch artist data from RapidAPI using axios
-// Takes in the artist's uid as an argument
+// Takes in the artist's id as an argument
 export const getArtistData = async (artistId) => {
   try {
     // Make a GET request to the Spotify23 API to fetch data for the given artist ID
@@ -48,17 +52,53 @@ export const getArtistData = async (artistId) => {
       params: {
         id: `${artistId}`,
       },
-      // Set the headers for the RapidAPI key and host
-      headers: {
-        "X-RapidAPI-Key": `${API_KEY}`,
-        "X-RapidAPI-Host": "spotify23.p.rapidapi.com",
-      },
+      headers,
     });
     // Set the fetched data to the "query" state variable
     return response.data.data.artist;
   } catch (error) {
     // Log any errors and display an alert
     console.log(error);
-    alert("Error fetching data");
+    alert("Error fetching artist data!");
+  }
+};
+
+// Function to fetch track data from RapidAPI using axios
+// Takes in the track's id as an argument
+export const getTrackData = async (trackId) => {
+  try {
+    // Make a GET request to the Spotify23 API to fetch data for the given artist ID
+    const response = await axios.get(`${BASE_URL}/tracks/`, {
+      params: {
+        ids: `${trackId}`,
+      },
+      headers,
+    });
+    // Set the fetched data to the "query" state variable
+    return response.data.tracks;
+  } catch (error) {
+    // Log any errors and display an alert
+    console.log(error);
+    alert("Error fetching track data!");
+  }
+};
+
+// Function to fetch track lyrics from RapidAPI using axios
+// Takes in the track's id as an argument
+export const getLyricsData = async (trackId) => {
+  try {
+    // Make a GET request to the Spotify23 API to fetch data for the given artist ID
+    const response = await axios.get(`${BASE_URL}/track_lyrics/`, {
+      params: {
+        id: `${trackId}`,
+      },
+      headers,
+    });
+    // Set the fetched data to the "query" state variable
+    return response.data;
+  } catch (error) {
+    // Log any errors and display an alert
+    console.log(error);
+    alert("Error fetching lyrics data!");
   }
 };

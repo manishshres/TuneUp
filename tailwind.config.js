@@ -5,12 +5,12 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // set dark mode as 'class' to enable dynamic switching
+  darkMode: "class", // set dark mode as 'class' to enable dynamic switching
   theme: {
     extend: {},
   },
   variants: {
     extend: {},
   },
-  plugins: [],
-}
+  plugins: [require("tailwind-scrollbar")],
+};
